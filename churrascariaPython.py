@@ -134,7 +134,50 @@ def cadastroBebidas():
         print("Bebida já cadastrada!")
         cadastroBebidas()
 
-cadastroPratos()
-cadastroBebidas()
+def caixa():
+
+    pagando = True
+    preco = 0
+    while(pagando):
+        
+        print("[1] Pratos\n[2] Bebidas\n")
+        
+        opcao = int(input("Qual opção: "))
+
+        if(opcao == 1):
+
+            pagandoPrato = True
+            while(pagandoPrato):
+                nome_prato_pagar = input("Digite o nome do prato ou para encerrar digite 0: ")
+
+                if(nome_prato_pagar == '0'):
+                    pagandoPrato = False
+                    break
+                try:
+                    with open("./pratos/"+nome_prato_pagar+".txt", 'r') as f:
+                        dados_prato = f.readlines()
+                        preco += int(dados_prato[1])
+                        print(f"Prato adicionado na conta, TOTAL: R${preco}")
+                except IOError:
+                    print("prato não encontrado")
+                    continue
+        elif(opcao == 2):
+            pagandoBebida = True
+            while(pagandoBebida):
+                nome_bebida_pagar = input("Digite o nome da bebida ou para encerrar digite 0: ")
+
+                if(nome_bebida_pagar == '0'):
+                    break
+                try:
+                    with open("./bebidas/"+nome_bebida_pagar+".txt", 'r') as f:
+                        dados_bebida = f.readlines()
+                        preco += int(dados_bebida[1])
+                        print(f"Bebida adicionado na conta, TOTAL: R${preco}")
+                except IOError:
+                    print("Bebida não encontrado")
+                    continue           
+
+
+caixa()
 
  
