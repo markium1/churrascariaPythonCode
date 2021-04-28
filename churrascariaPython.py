@@ -117,7 +117,7 @@ def cadastroPratos():
 
     if(vericaCadastroPrato(nome_prato)):
         with open("./pratos/"+nome_prato+".txt", 'w') as f:
-            f.write(nome_prato.upper + "\n")
+            f.write(nome_prato.upper() + "\n")
             f.write(preco_prato)
     else:
         print("Prato já cadastrado!")
@@ -135,5 +135,6 @@ def cadastroBebidas():
         cadastroBebidas()
 
 cadastroPratos()
+cadastroBebidas()
 
  
