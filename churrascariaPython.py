@@ -140,7 +140,7 @@ def caixa():
     preco = 0
     while(pagando):
         
-        print("[1] Pratos\n[2] Bebidas\n")
+        print("[1] Pratos\n[2] Bebidas\n[3]Encerrar")
         
         opcao = int(input("Qual opção: "))
 
@@ -175,7 +175,34 @@ def caixa():
                         print(f"Bebida adicionado na conta, TOTAL: R${preco}")
                 except IOError:
                     print("Bebida não encontrado")
-                    continue           
+                    continue
+        elif(opcao == 3):
+            credito_sim = input("Cliente deseja adicionar crédito? [S] ou [N]: ")
+            if(credito_sim == 'S' or credito_sim == 's'):
+                cpf_cliente = input("CPF do cliente: ")
+                try:
+                    if(len(cpf_cliente) == 11):
+                        with open("./cadastros/"+cpf_cliente+".txt", 'r') as f:
+                            dados = f.readlines()
+                            credito_novo = float(dados[2]) + preco*0.05
+                            print(credito_novo)
+                            nome_cliente_cadastro = dados[0]
+                    
+                        with open("./cadastros/"+cpf_cliente+".txt", 'w') as f:
+
+                            f.write(nome_cliente_cadastro.upper())
+                            f.write(cpf_cliente + "\n")
+                            f.write(str(credito_novo))
+                            
+                        with open("./cadastros/"+cpf_cliente+".txt", 'r') as f:    
+                            dados = f.readlines()
+                            print(f"Nome: {dados[0]}\nCPF:{dados[1]}\nCréditos: R${dados[2]}")
+                            return True
+                    print("CPF INVALIDO")
+                    return False
+                except IOError:
+                    print('Cadastro não encontrado')
+                    return False                           
 
 
 caixa()
