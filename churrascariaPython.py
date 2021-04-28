@@ -1,10 +1,12 @@
 import os
+import time
 import pathlib
 import os.path
 
-print("*************************\n")
-print("Churrascaria PYTHON CODE\n")
-print("*************************\n")
+def menu():
+    print("*************************\n")
+    print("Churrascaria PYTHON CODE\n")
+    print("*************************\n")
 
 def cadastro():
     
@@ -18,8 +20,14 @@ def cadastro():
             arquivo.write(cpf + '\n')
             arquivo.write(str(credito))
             print("Cadastro realizado com sucesso!")
+            time.sleep(3)
+            os.system("clear")
+            menu()
     else:
         print("CPF INVALIDO OU JA CADASTRADO!")
+        time.sleep(3)
+        os.system("clear")
+        cadastro()
 
 def validaCadastro(cpf):
 
@@ -37,25 +45,33 @@ def procuraCadastro():
         if(len(cpf) == 11):
             with open("./cadastros/"+cpf+".txt", 'r') as f:
                 dados = f.readlines()
-                print(f"Nome: {dados[0]}\nCPF:{dados[1]}\nCréditos:{dados[2]}")
-                return True
-        print("CPF INVALIDO")
+                os.system("Clear")
+                print(f"Nome: {dados[0]}\nCPF:{dados[1]}\nCréditos: {dados[2]}")
+                return cpf
+        print("CPF INVALIDO, TENTE NOVAMENTE!")
+        time.sleep(3)
+        os.system("clear")
+        procuraCadastro()
         return False
     except IOError:
         print('Cadastro não encontrado')
+        time.sleep(3)
+        os.system("clear")
+        menu()
         return False
 
 def alteracaoCadastro():
 
     print("[1] Editar Cadastro\n[2] Excluir Cadastro")
     op = int(input())
+    os.system("clear")
     if(op == 1):
-        
+        print("********\nProcurar\n******** \n")
         cpf = procuraCadastro()
         if(cpf):
-
+            print("********\nAlterar\n******** \n")
             print("[1] Alterar Nome\n[2] Alterar Crédito")
-            op = int(input())
+            op = int(input("QUAL OPÇÃO:"))
             if(op == 1):
 
                 #Busca as informações de cpf e credito do cadastro
@@ -69,7 +85,9 @@ def alteracaoCadastro():
                     f.write(nome.upper() + '\n')
                     f.write(cpf_cadastro)
                     f.write(credito)
-
+                print("Cadastro alterado com sucesso!")
+                menu()
+                time.sleep(3)
             elif(op == 2):
                 #Busca as informações de nome e cpf do cadastro
                 with open("./cadastros/"+cpf+".txt", 'r') as f:
@@ -82,6 +100,10 @@ def alteracaoCadastro():
                     f.write(nome_cadastro.upper())
                     f.write(cpf_cadastro)
                     f.write(novo_credito)
+                print("Crédito alterado com sucesso!")
+                time.sleep(3)
+                os.system("clear")
+                menu()
             else:
                 print("Opção Invalida!")
     elif(op==2):
@@ -90,9 +112,13 @@ def alteracaoCadastro():
         try:
             os.remove("./cadastros/"+cpf_remove+'.txt')
             print("Removido com Sucesso")
+            time.sleep(3)
+            menu()
             return True
         except IOError:
             print("ERRO! Não existe cadastro com esse CPF")
+            time.sleep(3)
+            menu()
             return True
 
 def vericaCadastroBebida(bebida):
@@ -119,9 +145,15 @@ def cadastroPratos():
         with open("./pratos/"+nome_prato+".txt", 'w') as f:
             f.write(nome_prato.upper() + "\n")
             f.write(preco_prato)
+            print("Prato cadastrado com sucesso!")
+            time.sleep(3)
+            menu()
     else:
+        os.system("clear")
         print("Prato já cadastrado!")
-        cadastroPratos()
+        time.sleep(3)
+        os.system("clear")
+        menu()
 
 def cadastroBebidas():
     nome_bebida = input("Qual o nome da Bebida: ")
@@ -130,9 +162,13 @@ def cadastroBebidas():
         with open("./bebidas/"+nome_bebida+".txt", 'w') as f:
             f.write(nome_bebida.upper()+ "\n")
             f.write(preco_bebida)
+            print("Bebida cadastrada com sucesso!")
+            time.sleep(3)
+            menu()
     else:
         print("Bebida já cadastrada!")
-        cadastroBebidas()
+        time.sleep(3)
+        menu()
 
 def caixa():
 
@@ -199,12 +235,16 @@ def caixa():
                             print(f"Nome: {dados[0]}\nCPF:{dados[1]}\nCréditos: R${dados[2]}")
                             return True
                     print("CPF INVALIDO")
-                    return False
+                    caixa()
                 except IOError:
-                    print('Cadastro não encontrado')
-                    return False                           
+                    print('Cadastro não encontrado\nTente novamente...')
+                    time.sleep(5)
+                    caixa()                         
+        else:
+            print("OPÇÃO INVALIDA, TENTE NOVAMENTE!")
+            time.sleep(3)
+            os.system("clear")
 
-
-caixa()
+cadastroPratos()
 
  
