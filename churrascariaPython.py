@@ -36,7 +36,6 @@ def procuraCadastro():
     try:
         if(len(cpf) == 11):
             with open("./cadastros/"+cpf+".txt", 'r') as f:
-
                 dados = f.readlines()
                 print(f"Nome: {dados[0]}\nCPF:{dados[1]}\nCréditos:{dados[2]}")
                 return True
@@ -95,6 +94,46 @@ def alteracaoCadastro():
         except IOError:
             print("ERRO! Não existe cadastro com esse CPF")
             return True
-        
-        
+
+def vericaCadastroBebida(bebida):
+    try:
+        with open("./bebidas/"+bebida+".txt", 'r') as f:
+            return False
+    except IOError:
+        return True
+
+def vericaCadastroPrato(prato):
+
+    try:
+        with open("./pratos/"+prato+".txt", 'r') as f:
+            return False
+    except IOError:
+        return True
+
+def cadastroPratos():
+
+    nome_prato = input("Qual o nome do Prato: ")
+    preco_prato = input("Qual o preço do Prato: R$")
+
+    if(vericaCadastroPrato(nome_prato)):
+        with open("./pratos/"+nome_prato+".txt", 'w') as f:
+            f.write(nome_prato.upper + "\n")
+            f.write(preco_prato)
+    else:
+        print("Prato já cadastrado!")
+        cadastroPratos()
+
+def cadastroBebidas():
+    nome_bebida = input("Qual o nome da Bebida: ")
+    preco_bebida = input("Qual o preço da Bebida: R$")
+    if(vericaCadastroBebida(nome_bebida)):
+        with open("./bebidas/"+nome_bebida+".txt", 'w') as f:
+            f.write(nome_bebida.upper()+ "\n")
+            f.write(preco_bebida)
+    else:
+        print("Bebida já cadastrada!")
+        cadastroBebidas()
+
+cadastroPratos()
+
  
