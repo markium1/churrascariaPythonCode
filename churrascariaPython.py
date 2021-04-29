@@ -86,8 +86,10 @@ def alteracaoCadastro():
                     f.write(cpf_cadastro)
                     f.write(credito)
                 print("Cadastro alterado com sucesso!")
-                menu()
                 time.sleep(3)
+                os.system("clear")
+                menu()
+                
             elif(op == 2):
                 #Busca as informações de nome e cpf do cadastro
                 with open("./cadastros/"+cpf+".txt", 'r') as f:
@@ -106,6 +108,9 @@ def alteracaoCadastro():
                 menu()
             else:
                 print("Opção Invalida!")
+                time.sleep(3)
+                os.system("clear")
+                alteracaoCadastro()
     elif(op==2):
 
         cpf_remove = input("Digite o CPF cadastrado para exclusão: ")
@@ -170,13 +175,41 @@ def cadastroBebidas():
         time.sleep(3)
         menu()
 
+def pagamentoComCredito(valorPagar):
+    cpf_pagamento = input("Digite o CPF do cliente: ")
+    tot_credito_cliente = 0
+    valorTotal = valorPagar
+    try:
+        if(len(cpf_pagamento) == 11):
+            with open("./cadastros/"+cpf_pagamento+".txt", 'r') as f:
+                dados = f.readlines()
+                tot_credito_cliente = float(dados[2])
+                if(tot_credito_cliente >= valorTotal):
+                    tot_credito_cliente -= valorTotal
+                    return True
+                else:
+                    print('Saldo Insuficiente')
+                    time.sleep(3)
+                    os.system("clear")                
+                    return False
+        else:
+            print("CPF Invalido!Aguarde...")
+            time.sleep(3)
+            os.system("clear")
+            return False
+    except IOError:
+        print('Cadastro não encontrado!')
+        time.sleep(3)
+        os.system("clear")
+        return False
 def caixa():
 
     pagando = True
     preco = 0
     while(pagando):
         
-        print("[1] Pratos\n[2] Bebidas\n[3]Encerrar")
+        print(f"Valor a pagar: R${preco}")
+        print("[1] Pratos\n[2] Bebidas\n[3] Encerrar Pedido\n[4] Pagar com crédito\n[5] Sair")
         
         opcao = int(input("Qual opção: "))
 
@@ -188,14 +221,18 @@ def caixa():
 
                 if(nome_prato_pagar == '0'):
                     pagandoPrato = False
+                    os.system("clear")
                     break
                 try:
                     with open("./pratos/"+nome_prato_pagar+".txt", 'r') as f:
                         dados_prato = f.readlines()
                         preco += int(dados_prato[1])
+                        os.system("clear")
                         print(f"Prato adicionado na conta, TOTAL: R${preco}")
                 except IOError:
                     print("prato não encontrado")
+                    time.sleep(3)
+                    os.system("clear")
                     continue
         elif(opcao == 2):
             pagandoBebida = True
@@ -215,36 +252,92 @@ def caixa():
         elif(opcao == 3):
             credito_sim = input("Cliente deseja adicionar crédito? [S] ou [N]: ")
             if(credito_sim == 'S' or credito_sim == 's'):
-                cpf_cliente = input("CPF do cliente: ")
-                try:
-                    if(len(cpf_cliente) == 11):
-                        with open("./cadastros/"+cpf_cliente+".txt", 'r') as f:
-                            dados = f.readlines()
-                            credito_novo = float(dados[2]) + preco*0.05
-                            print(credito_novo)
-                            nome_cliente_cadastro = dados[0]
-                    
-                        with open("./cadastros/"+cpf_cliente+".txt", 'w') as f:
+                adicionar_credito = True
+                while(adicionar_credito):
+                    os.system("clear")
+                    print("*******************\nAdicinando Crédito\n*******************\n")
+                    cpf_cliente = input("CPF do cliente: ")
+                    try:
+                        if(len(cpf_cliente) == 11):
+                            with open("./cadastros/"+cpf_cliente+".txt", 'r') as f:
+                                dados = f.readlines()
+                                credito_novo = float(dados[2]) + preco*0.05
+                                nome_cliente_cadastro = dados[0]
+                        
+                            with open("./cadastros/"+cpf_cliente+".txt", 'w') as f:
 
-                            f.write(nome_cliente_cadastro.upper())
-                            f.write(cpf_cliente + "\n")
-                            f.write(str(credito_novo))
-                            
-                        with open("./cadastros/"+cpf_cliente+".txt", 'r') as f:    
-                            dados = f.readlines()
-                            print(f"Nome: {dados[0]}\nCPF:{dados[1]}\nCréditos: R${dados[2]}")
-                            return True
-                    print("CPF INVALIDO")
-                    caixa()
-                except IOError:
-                    print('Cadastro não encontrado\nTente novamente...')
-                    time.sleep(5)
-                    caixa()                         
+                                f.write(nome_cliente_cadastro.upper())
+                                f.write(cpf_cliente + "\n")
+                                f.write(str(credito_novo))
+                                
+                            with open("./cadastros/"+cpf_cliente+".txt", 'r') as f:    
+                                dados = f.readlines()
+                                print("Crédito adicionado com sucesso!")
+                                print(f"Nome: {dados[0]}CPF:{dados[1]}Créditos: R${dados[2]}")
+                                time.sleep(3)
+                                os.system("clear")
+                                break
+                        resp = input("CPF INVALIDO\nTentar Novamente? [S] ou [N]: ")
+                        if(resp == 's' or resp == 'S'):
+                            print("Aguarde...")
+                            time.sleep(3)
+                            os.system("clear")
+                            continue
+                        elif(resp == 'n' or resp == 'N'):
+                            adicionar_credito = False
+                            pagando = False
+                        else:
+                            print("Opção invalida, Insira novamente o CPF!")
+                            time.sleep(3)
+                            os.system("clear")
+                            continue
+
+                    except IOError:
+
+                        resp = input("Cadastro não encontrado\nTentar Novamente? [S] ou [N]: ")
+                        if(resp == 's' or resp == 'S'):
+                            print("Aguarde...")
+                            time.sleep(3)
+                            os.system("clear")
+                            continue
+                        elif(resp == 'n' or resp == 'N'):
+                            print("Obrigado Pela Preferência!")
+                            adicionar_credito = False
+                            menu()
+                        else:
+                            print("Opção invalida, Insira novamente o CPF!")
+                            time.sleep(3)
+                            os.system("clear")
+                            continue
+                        time.sleep(5)
+     
+            elif(credito_sim == 'N' or credito_sim == 'n'):
+                print(f"Valor total a pagar: R${preco}")
+                print("Obrigado Pela Preferência!")
+                time.sleep(3)
+                os.system("clear")
+                menu()
+        elif(opcao == 4):
+            
+            if(pagamentoComCredito(preco)):
+                print("Pagamento efetuado com sucesso!\nObrigado Pela preferência!")
+                pagando = False
+                time.sleep(3)
+                menu()
+            else:
+                continue
+        elif(opcao == 5):
+            print("OBRIGADO PELA PREFERÊNCIA! VOLTE SEMPRE")
+            time.sleep(2)
+            os.system("clear")
         else:
             print("OPÇÃO INVALIDA, TENTE NOVAMENTE!")
             time.sleep(3)
             os.system("clear")
+            caixa()
 
-cadastroPratos()
+caixa()
 
+#FAZER MENU
+#pagar com crédito
  
