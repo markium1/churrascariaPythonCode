@@ -4,6 +4,7 @@ import pathlib
 import os.path
 
 def menu():
+    os.system("clear")
     print("*************************\n")
     print("Churrascaria PYTHON CODE\n")
     print("*************************\n")
@@ -176,6 +177,8 @@ def cadastroBebidas():
         menu()
 
 def pagamentoComCredito(valorPagar):
+    os.system("clear")
+    print("*****************\nPAGAR COM CRÉDITO\n*****************")
     cpf_pagamento = input("Digite o CPF do cliente: ")
     tot_credito_cliente = 0
     valorTotal = valorPagar
@@ -185,6 +188,7 @@ def pagamentoComCredito(valorPagar):
                 dados = f.readlines()
                 tot_credito_cliente = float(dados[2])
                 if(tot_credito_cliente >= valorTotal):
+
                     tot_credito_cliente -= valorTotal
                     return True
                 else:
@@ -202,19 +206,22 @@ def pagamentoComCredito(valorPagar):
         time.sleep(3)
         os.system("clear")
         return False
+
 def caixa():
 
     pagando = True
     preco = 0
     while(pagando):
         
+        print("************\nMENU PEDIDO\n************\n")
         print(f"Valor a pagar: R${preco}")
-        print("[1] Pratos\n[2] Bebidas\n[3] Encerrar Pedido\n[4] Pagar com crédito\n[5] Sair")
+        print("[1] Adicionar Pratos\n[2] Adicionar Bebidas\n[3] Encerrar Pedido\n[4] Pagar com crédito\n[5] Sair")
         
         opcao = int(input("Qual opção: "))
 
         if(opcao == 1):
-
+            os.system("clear")
+            print("****************\nAdicionar Prato\n****************")
             pagandoPrato = True
             while(pagandoPrato):
                 nome_prato_pagar = input("Digite o nome do prato ou para encerrar digite 0: ")
@@ -235,6 +242,8 @@ def caixa():
                     os.system("clear")
                     continue
         elif(opcao == 2):
+            os.system("clear")
+            print("****************\nAdicionar Bebida\n****************")
             pagandoBebida = True
             while(pagandoBebida):
                 nome_bebida_pagar = input("Digite o nome da bebida ou para encerrar digite 0: ")
@@ -250,6 +259,8 @@ def caixa():
                     print("Bebida não encontrado")
                     continue
         elif(opcao == 3):
+            os.system("clear")
+            print("*****************\nEncerrando Pedido\n*****************")
             credito_sim = input("Cliente deseja adicionar crédito? [S] ou [N]: ")
             if(credito_sim == 'S' or credito_sim == 's'):
                 adicionar_credito = True
@@ -274,6 +285,8 @@ def caixa():
                                 dados = f.readlines()
                                 print("Crédito adicionado com sucesso!")
                                 print(f"Nome: {dados[0]}CPF:{dados[1]}Créditos: R${dados[2]}")
+                                adicionar_credito = False
+                                pagando = False
                                 time.sleep(3)
                                 os.system("clear")
                                 break
@@ -310,34 +323,33 @@ def caixa():
                             os.system("clear")
                             continue
                         time.sleep(5)
-     
+                
             elif(credito_sim == 'N' or credito_sim == 'n'):
                 print(f"Valor total a pagar: R${preco}")
                 print("Obrigado Pela Preferência!")
                 time.sleep(3)
                 os.system("clear")
-                menu()
+                break
         elif(opcao == 4):
             
             if(pagamentoComCredito(preco)):
                 print("Pagamento efetuado com sucesso!\nObrigado Pela preferência!")
                 pagando = False
                 time.sleep(3)
-                menu()
+                break
             else:
                 continue
         elif(opcao == 5):
             print("OBRIGADO PELA PREFERÊNCIA! VOLTE SEMPRE")
             time.sleep(2)
             os.system("clear")
+
+            break
         else:
             print("OPÇÃO INVALIDA, TENTE NOVAMENTE!")
             time.sleep(3)
             os.system("clear")
             caixa()
-
+    menu()
 caixa()
-
-#FAZER MENU
-#pagar com crédito
  
